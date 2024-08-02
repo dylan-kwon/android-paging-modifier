@@ -29,27 +29,27 @@ class PagingDataModifier<T : Any> {
 
     /**
      * Inserts a new item into the top of list.
-     * For more details, please refer to [PagingDataModification.InsertHeader].
+     * For more details, please refer to [PagingDataModification.InsertToTop].
      */
-    fun insertHeader(
+    fun insertToTop(
         data: T,
         type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE
     ) {
         modifications.updateList {
-            this += PagingDataModification.InsertHeader(data, type)
+            this += PagingDataModification.InsertToTop(data, type)
         }
     }
 
     /**
      * Inserts a new item into the bottom of list.
-     * For more details, please refer to [PagingDataModification.InsertFooter].
+     * For more details, please refer to [PagingDataModification.InsertToBottom].
      */
-    fun insertFooter(
+    fun insertToBottom(
         data: T,
         type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE
     ) {
         modifications.updateList {
-            this += PagingDataModification.InsertFooter(data, type)
+            this += PagingDataModification.InsertToBottom(data, type)
         }
     }
 

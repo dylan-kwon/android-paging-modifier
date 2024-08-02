@@ -2,8 +2,8 @@
     <string name="app_name">android-paging-modifier</string>
 
     <string name="insert">Insert</string>
-    <string name="insert_header">Insert Header</string>
-    <string name="insert_footer">Insert Footer</string>
+    <string name="insert_to_top">Insert to Top</string>
+    <string name="insert_to_bottom">Insert to Bottom</string>
     <string name="update">update</string>
     <string name="delete">delete</string>
 </resources>

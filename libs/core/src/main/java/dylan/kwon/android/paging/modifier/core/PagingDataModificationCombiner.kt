@@ -38,13 +38,13 @@ internal fun <T : Any, K : Any> PagingData<T>.applyModify(
         }
     }
 
-    // Insert Header.
-    is PagingDataModification.InsertHeader<T> -> insertHeaderItem(
+    // Insert to Top.
+    is PagingDataModification.InsertToTop<T> -> insertHeaderItem(
         item = modification.data
     )
 
-    // Insert Footer.
-    is PagingDataModification.InsertFooter<T> -> insertFooterItem(
+    // Insert to Bottom.
+    is PagingDataModification.InsertToBottom<T> -> insertFooterItem(
         item = modification.data,
         terminalSeparatorType = modification.type
     )

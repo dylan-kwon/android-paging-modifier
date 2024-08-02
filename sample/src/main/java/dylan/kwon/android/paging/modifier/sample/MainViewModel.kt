@@ -36,15 +36,15 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun insertHeader() {
-        modifier.insertHeader(
-            createNewData("Insert Header")
+    fun insertToTop() {
+        modifier.insertToTop(
+            createNewData("Insert to Top")
         )
     }
 
-    fun insertFooter() {
-        modifier.insertFooter(
-            createNewData("Insert Footer")
+    fun insertToBottom() {
+        modifier.insertToBottom(
+            createNewData("Insert to Bottom")
         )
     }
 

@@ -20,7 +20,7 @@ sealed class PagingDataModification<T : Any> {
      * Adds [data] to the top of the list.
      * For a description of the type, please check [TerminalSeparatorType].
      */
-    data class InsertHeader<T : Any>(
+    data class InsertToTop<T : Any>(
         val data: T,
         val type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE
     ) : PagingDataModification<T>()
@@ -29,7 +29,7 @@ sealed class PagingDataModification<T : Any> {
      * Adds [data] to the bottom of the list.
      * For a description of the type, please check [TerminalSeparatorType].
      */
-    data class InsertFooter<T : Any>(
+    data class InsertToBottom<T : Any>(
         val data: T,
         val type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE
     ) : PagingDataModification<T>()

@@ -57,8 +57,8 @@ class MainActivity : ComponentActivity() {
                 Screen(
                     pagingItems = pagingItems,
                     onInsertClick = viewModel::insert,
-                    onInsertHeaderClick = viewModel::insertHeader,
-                    onInsertFooterClick = viewModel::insertFooter,
+                    onInsertToTopClick = viewModel::insertToTop,
+                    onInsertToBottomClick = viewModel::insertToBottom,
                     onUpdateClick = viewModel::update,
                     onDeleteClick = viewModel::delete
                 )
@@ -72,8 +72,8 @@ fun Screen(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<MyData>,
     onInsertClick: () -> Unit,
-    onInsertHeaderClick: () -> Unit,
-    onInsertFooterClick: () -> Unit,
+    onInsertToTopClick: () -> Unit,
+    onInsertToBottomClick: () -> Unit,
     onDeleteClick: (MyData) -> Unit,
     onUpdateClick: (MyData) -> Unit,
 ) {
@@ -94,15 +94,15 @@ fun Screen(
             Actions(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onInsertClick = onInsertClick,
-                onInsertHeaderClick = {
-                    onInsertHeaderClick()
+                onInsertToTopClick = {
+                    onInsertToTopClick()
                     coroutineScope.launch {
                         delay(50)
                         listState.animateScrollToItem(0)
                     }
                 },
-                onInsertFooterClick = {
-                    onInsertFooterClick()
+                onInsertToBottomClick = {
+                    onInsertToBottomClick()
                     coroutineScope.launch {
                         delay(50)
                         listState.animateScrollToItem(pagingItems.itemCount - 1)
@@ -169,8 +169,8 @@ private fun List(
 private fun Actions(
     modifier: Modifier = Modifier,
     onInsertClick: () -> Unit,
-    onInsertHeaderClick: () -> Unit,
-    onInsertFooterClick: () -> Unit,
+    onInsertToTopClick: () -> Unit,
+    onInsertToBottomClick: () -> Unit,
 ) {
     FlowRow(
         modifier = modifier,
@@ -182,12 +182,12 @@ private fun Actions(
             onClick = onInsertClick
         )
         ActionButton(
-            text = stringResource(id = R.string.insert_header),
-            onClick = onInsertHeaderClick
+            text = stringResource(id = R.string.insert_to_top),
+            onClick = onInsertToTopClick
         )
         ActionButton(
-            text = stringResource(id = R.string.insert_footer),
-            onClick = onInsertFooterClick
+            text = stringResource(id = R.string.insert_to_bottom),
+            onClick = onInsertToBottomClick
         )
     }
 }
@@ -237,8 +237,8 @@ fun Preview() {
         Screen(
             pagingItems = flowOf(PagingData.empty<MyData>()).collectAsLazyPagingItems(),
             onInsertClick = {},
-            onInsertHeaderClick = {},
-            onInsertFooterClick = {},
+            onInsertToTopClick = {},
+            onInsertToBottomClick = {},
             onDeleteClick = {},
             onUpdateClick = {}
         )
