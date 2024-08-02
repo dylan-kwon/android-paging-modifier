@@ -23,7 +23,7 @@ fun <T : Any, K : Any> Flow<PagingData<T>>.modifier(
 }
 
 /**
- * Applies individual modifiers to PagingData to return a new PagingData.
+ * Applies individual modification to PagingData to return a new PagingData.
  */
 internal fun <T : Any, K : Any> PagingData<T>.applyModify(
     modification: PagingDataModification<T>,

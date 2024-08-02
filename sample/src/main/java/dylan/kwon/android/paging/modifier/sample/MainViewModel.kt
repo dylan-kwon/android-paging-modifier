@@ -31,7 +31,7 @@ class MainViewModel : ViewModel() {
         modifier.insert(
             data = createNewData("Insert"),
             condition = { _, after ->
-                after?.id == 5
+                after?.id == 2
             }
         )
     }
@@ -48,19 +48,24 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    fun update() {
-//            modifier.update()
+    fun update(myData: MyData) {
+        modifier.update(
+            myData.copy(
+                createdAt = System.currentTimeMillis()
+            )
+        )
     }
 
-    fun delete() {
-//        modifier.delete()
+    fun delete(myData: MyData) {
+        modifier.delete(myData)
     }
 
     private fun createNewData(titlePrefix: String): MyData {
         val id = -(++insertCount)
         return MyData(
             id = id,
-            title = "$titlePrefix: ${-id}"
+            title = titlePrefix,
+            createdAt = System.currentTimeMillis()
         )
     }
 

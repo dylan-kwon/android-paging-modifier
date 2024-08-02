@@ -5,9 +5,10 @@ import androidx.paging.TerminalSeparatorType
 sealed class PagingDataModification<T : Any> {
 
     /**
-     * The insertion position is determined using prev and next.
-     * If prev and next are at the beginning or end of the list, they are null.
-     * If the return value is null, the insertion is not performed.
+     * the insertion position is determined using prev and next.
+     * if prev and next are at the beginning or end of the list, they are null.
+     * if the return value of [condition] is false, the insertion is not performed.
+     * For a description of the type, please check [TerminalSeparatorType].
      */
     data class Insert<T : Any>(
         val data: T,
@@ -17,6 +18,7 @@ sealed class PagingDataModification<T : Any> {
 
     /**
      * Adds [data] to the top of the list.
+     * For a description of the type, please check [TerminalSeparatorType].
      */
     data class InsertHeader<T : Any>(
         val data: T,
@@ -25,6 +27,7 @@ sealed class PagingDataModification<T : Any> {
 
     /**
      * Adds [data] to the bottom of the list.
+     * For a description of the type, please check [TerminalSeparatorType].
      */
     data class InsertFooter<T : Any>(
         val data: T,

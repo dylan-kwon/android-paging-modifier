@@ -12,26 +12,38 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import dylan.kwon.android.paging.modifier.sample.ui.theme.AndroidpagingmodifierTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +57,10 @@ class MainActivity : ComponentActivity() {
                 Screen(
                     pagingItems = pagingItems,
                     onInsertClick = viewModel::insert,
-                    onInsertToTopClick = viewModel::insertHeader,
-                    onInsertToBottomClick = viewModel::insertFooter,
+                    onInsertHeaderClick = viewModel::insertHeader,
+                    onInsertFooterClick = viewModel::insertFooter,
+                    onUpdateClick = viewModel::update,
+                    onDeleteClick = viewModel::delete
                 )
             }
         }
@@ -58,8 +72,10 @@ fun Screen(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<MyData>,
     onInsertClick: () -> Unit,
-    onInsertToTopClick: () -> Unit,
-    onInsertToBottomClick: () -> Unit,
+    onInsertHeaderClick: () -> Unit,
+    onInsertFooterClick: () -> Unit,
+    onDeleteClick: (MyData) -> Unit,
+    onUpdateClick: (MyData) -> Unit,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize()
@@ -67,14 +83,31 @@ fun Screen(
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
+            val listState = rememberLazyListState()
+            val coroutineScope = rememberCoroutineScope()
             List(
-                pagingItems = pagingItems
+                listState = listState,
+                pagingItems = pagingItems,
+                onUpdateClick = onUpdateClick,
+                onDeleteClick = onDeleteClick
             )
             Actions(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onInsertClick = onInsertClick,
-                onInsertToTopClick = onInsertToTopClick,
-                onInsertToBottomClick = onInsertToBottomClick,
+                onInsertHeaderClick = {
+                    onInsertHeaderClick()
+                    coroutineScope.launch {
+                        delay(50)
+                        listState.animateScrollToItem(0)
+                    }
+                },
+                onInsertFooterClick = {
+                    onInsertFooterClick()
+                    coroutineScope.launch {
+                        delay(50)
+                        listState.animateScrollToItem(pagingItems.itemCount - 1)
+                    }
+                },
             )
         }
     }
@@ -83,11 +116,14 @@ fun Screen(
 @Composable
 private fun List(
     modifier: Modifier = Modifier,
+    listState: LazyListState,
     pagingItems: LazyPagingItems<MyData>,
+    onDeleteClick: (MyData) -> Unit,
+    onUpdateClick: (MyData) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(bottom = 100.dp)
+        state = listState,
     ) {
         items(
             count = pagingItems.itemCount,
@@ -98,10 +134,33 @@ private fun List(
             val data = pagingItems[it]
             if (data != null) ListItem(
                 modifier = Modifier.animateItemPlacement(),
+                overlineContent = {
+                    Text(text = "id: ${data.id}")
+                },
                 headlineContent = {
                     Text(text = data.title)
+                },
+                supportingContent = {
+                    Text(text = "createdAt: ${data.createdAt}")
+                },
+                trailingContent = {
+                    Row {
+                        UpdateButton {
+                            onUpdateClick(data)
+                        }
+                        DeleteButton {
+                            onDeleteClick(data)
+                        }
+                    }
                 }
             )
+        }
+    }
+    if (pagingItems.loadState.prepend is LoadState.NotLoading &&
+        pagingItems.loadState.prepend.endOfPaginationReached
+    ) {
+        LaunchedEffect(Unit) {
+            listState.animateScrollToItem(0)
         }
     }
 }
@@ -110,8 +169,8 @@ private fun List(
 private fun Actions(
     modifier: Modifier = Modifier,
     onInsertClick: () -> Unit,
-    onInsertToTopClick: () -> Unit,
-    onInsertToBottomClick: () -> Unit,
+    onInsertHeaderClick: () -> Unit,
+    onInsertFooterClick: () -> Unit,
 ) {
     FlowRow(
         modifier = modifier,
@@ -124,11 +183,11 @@ private fun Actions(
         )
         ActionButton(
             text = stringResource(id = R.string.insert_header),
-            onClick = onInsertToTopClick
+            onClick = onInsertHeaderClick
         )
         ActionButton(
             text = stringResource(id = R.string.insert_footer),
-            onClick = onInsertToBottomClick
+            onClick = onInsertFooterClick
         )
     }
 }
@@ -148,14 +207,40 @@ private fun ActionButton(
 }
 
 @Composable
+fun UpdateButton(
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Edit,
+            contentDescription = stringResource(id = R.string.update)
+        )
+    }
+}
+
+@Composable
+fun DeleteButton(
+    onClick: () -> Unit
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = Icons.Default.Delete,
+            contentDescription = stringResource(id = R.string.delete)
+        )
+    }
+}
+
+@Composable
 @Preview(showBackground = true)
 fun Preview() {
     AndroidpagingmodifierTheme {
         Screen(
             pagingItems = flowOf(PagingData.empty<MyData>()).collectAsLazyPagingItems(),
             onInsertClick = {},
-            onInsertToTopClick = {},
-            onInsertToBottomClick = {},
+            onInsertHeaderClick = {},
+            onInsertFooterClick = {},
+            onDeleteClick = {},
+            onUpdateClick = {}
         )
     }
 }

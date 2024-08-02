@@ -7,9 +7,16 @@ import kotlinx.coroutines.flow.update
 
 class PagingDataModifier<T : Any> {
 
+    /**
+     * A list of operations that modify PagingData.
+     */
     private val modifications = MutableStateFlow<List<PagingDataModification<T>>>(mutableListOf())
     val flow = modifications.asStateFlow()
 
+    /**
+     * Inserts a new item into the list.
+     * For more details, please refer to [PagingDataModification.Insert].
+     */
     fun insert(
         data: T,
         type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE,
@@ -20,6 +27,10 @@ class PagingDataModifier<T : Any> {
         }
     }
 
+    /**
+     * Inserts a new item into the top of list.
+     * For more details, please refer to [PagingDataModification.InsertHeader].
+     */
     fun insertHeader(
         data: T,
         type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE
@@ -29,6 +40,10 @@ class PagingDataModifier<T : Any> {
         }
     }
 
+    /**
+     * Inserts a new item into the bottom of list.
+     * For more details, please refer to [PagingDataModification.InsertFooter].
+     */
     fun insertFooter(
         data: T,
         type: TerminalSeparatorType = TerminalSeparatorType.FULLY_COMPLETE
@@ -38,25 +53,35 @@ class PagingDataModifier<T : Any> {
         }
     }
 
+    /**
+     * Updates an existing item in the list.
+     * For more details, please refer to [PagingDataModification.Update].
+     */
     fun update(data: T) {
         modifications.updateList {
             this += PagingDataModification.Update(data)
         }
     }
 
+    /**
+     * Deletes an existing item in the list.
+     * For more details, please refer to [PagingDataModification.Delete].
+     */
     fun delete(data: T) {
         modifications.updateList {
             this += PagingDataModification.Delete(data)
         }
     }
-
 }
 
+/**
+ * The existing list is shallow copied, [block] is executed,
+ * and the result is reflected in the new state.
+ */
 private fun <T : Any> MutableStateFlow<List<PagingDataModification<T>>>.updateList(
     block: MutableList<PagingDataModification<T>>.() -> Unit
-) =
-    update {
-        it.toMutableList().apply {
-            block(this)
-        }
+) = update {
+    it.toMutableList().apply {
+        block(this)
     }
+}

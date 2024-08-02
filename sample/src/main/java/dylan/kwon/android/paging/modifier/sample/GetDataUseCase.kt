@@ -10,11 +10,13 @@ class GetDataUseCase {
             return null
         }
         return mutableListOf<MyData>().apply {
+            val now = System.currentTimeMillis()
             repeat(count) {
                 val dataId = id + it
                 this += MyData(
                     id = dataId,
-                    title = "Title $dataId"
+                    title = "From PageSource",
+                    createdAt = now
                 )
             }
         }
