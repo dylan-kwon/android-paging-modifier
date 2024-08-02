@@ -20,7 +20,7 @@ This library helps you easily modify already loaded PagingData without invalidat
 
 ## Preview
 
-<video src="./docs/res/preview.mp4"></video>
+<video src="https://github.com/user-attachments/assets/d1fa0f10-65af-4d23-be2e-0c8933b1d41c"></video>
 
 ## Installation
 
