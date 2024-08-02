@@ -10,6 +10,7 @@ activityCompose = "1.9.1"
 composeBom = "2024.06.00"
 jetbrainsKotlinJvm = "2.0.0"
 paging = "3.3.1"
+paging-modifier = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-paging-common-ktx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+
+# Paging Modifier
+paging-modifier-core = { group = "dylan.kwon", name = "paging-modifier-core", version.ref = "paging-modifier" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
