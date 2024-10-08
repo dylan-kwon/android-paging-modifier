@@ -29,7 +29,7 @@ dependencyResolutionManagement {
     ..
     repositories {
         ..
-        maven("https://maven.pkg.github.com/dylan-kwon/android-paging-core") {
+        maven("https://maven.pkg.github.com/dylan-kwon/android-paging-modifier") {
             credentials {
                 username = INPUT_YOUR_GITHUB_USER_NAME
                 password = INPUT_YOUR_GITHUB_TOKEN
