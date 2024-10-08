@@ -40,7 +40,7 @@ dependencyResolutionManagement {
 ```
 
 ```kotlin
-implementation("dylan.kwon:paging-modifier-android:$version")
+implementation("dylan.kwon:paging-modifier-core:$version")
 ```
 
 ## How To Use
