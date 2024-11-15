@@ -13,5 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+gradle.properties
 publish.properties
 /act

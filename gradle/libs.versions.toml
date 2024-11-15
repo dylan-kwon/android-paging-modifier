@@ -9,8 +9,9 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.10.01"
 jetbrainsKotlinJvm = "2.0.0"
+vanniktechMavenPublish = "0.30.0"
 paging = "3.3.2"
-paging-modifier = "1.0.0"
+paging-modifier = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,10 +35,12 @@ androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtim
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 # Paging Modifier
-paging-modifier-core = { group = "dylan.kwon", name = "paging-modifier-core", version.ref = "paging-modifier" }
+paging-modifier-core = { group = "io.github.dylan-kwon", name = "paging-modifier-core", version.ref = "paging-modifier" }
 
 [plugins]
+java-library = { id = "java-library" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+vanniktech-maven-publish = {id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish"}
