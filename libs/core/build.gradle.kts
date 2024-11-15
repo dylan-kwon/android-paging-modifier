@@ -7,14 +7,6 @@ plugins {
     alias(libs.plugins.vanniktech.maven.publish)
 }
 
-val publishProperties = loadProperties(
-    rootProject.file("publish.properties").path
-)
-
-val versionProperties = loadProperties(
-    rootProject.file("version.properties").path
-)
-
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -29,6 +21,14 @@ dependencies {
 }
 
 mavenPublishing {
+    val publishProperties = loadProperties(
+        rootProject.file("publish.properties").path
+    )
+
+    val versionProperties = loadProperties(
+        rootProject.file("version.properties").path
+    )
+
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
     signAllPublications()

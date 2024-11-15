@@ -22,9 +22,9 @@ jobs:
           
           mkdir -p ./.gnupg
           
-          echo '${{ secrets.GRADLE_PROPERTIES }}' | openssl base64 -d -out ./gradle.properties
-          echo '${{ secrets.PUBLISH_PROPERTIES }}' | openssl base64 -d -out ./publish.properties
-          echo '${{ secrets.SIGNING_KEY }}' | openssl base64 -d -out ./.gnupg/secring.gpg
+          echo ${{ secrets.GRADLE_PROPERTIES }} | openssl base64 -d -A -out ./gradle.properties
+          echo ${{ secrets.PUBLISH_PROPERTIES }} | openssl base64 -d -A -out ./publish.properties
+          echo ${{ secrets.SIGNING_KEY }} | openssl base64 -d -A -out ./.gnupg/secring.gpg
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
