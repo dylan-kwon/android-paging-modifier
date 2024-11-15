@@ -9,6 +9,7 @@ on:
 jobs:
   Publishing:
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Checkout
@@ -19,7 +20,11 @@ jobs:
           VERSION_NAME=$(grep "versionName" ./version.properties | cut -d "=" -f 2)
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
           
+          mkdir -p ./.gnupg
+          
+          echo '${{ secrets.GRADLE_PROPERTIES }}' | openssl base64 -d -out ./gradle.properties
           echo '${{ secrets.PUBLISH_PROPERTIES }}' | openssl base64 -d -out ./publish.properties
+          echo '${{ secrets.SIGNING_KEY }}' | openssl base64 -d -out ./.gnupg/secring.gpg
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -33,11 +38,12 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Publish
-        run: ./gradlew publish
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
 
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.VERSION_NAME }}
-          allowUpdates: true
+          allowUpdates: false
+          skipIfReleaseExists: true
           generateReleaseNotes: true

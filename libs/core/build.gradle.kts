@@ -3,9 +3,18 @@ import org.jetbrains.kotlin.konan.properties.loadProperties
 
 plugins {
     id(libs.plugins.java.library.get().pluginId)
+    id(libs.plugins.signing.get().pluginId)
     alias(libs.plugins.jetbrains.kotlin.jvm)
     alias(libs.plugins.vanniktech.maven.publish)
 }
+
+val publishProperties = loadProperties(
+    rootProject.file("publish.properties").path
+)
+
+val versionProperties = loadProperties(
+    rootProject.file("version.properties").path
+)
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -20,17 +29,16 @@ dependencies {
     implementation(libs.androidx.paging.common.ktx)
 }
 
+signing {
+    useInMemoryPgpKeys(
+        publishProperties["signingKeyId"].toString(),
+        publishProperties["signingKeyPath"].toString(),
+        publishProperties["signingPassword"].toString()
+    )
+}
+
 mavenPublishing {
-    val publishProperties = loadProperties(
-        rootProject.file("publish.properties").path
-    )
-    val versionProperties = loadProperties(
-        rootProject.file("version.properties").path
-    )
-
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-
-    signAllPublications()
 
     coordinates(
         groupId = publishProperties["groupId"].toString(),
